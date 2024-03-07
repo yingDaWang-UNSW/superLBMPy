@@ -1,7 +1,6 @@
 from mpi4py import MPI
 import numpy as np
 import pdb
-
     
 def split_into_blocks(image, nx, ny, nz):
     blocks = []
@@ -113,187 +112,6 @@ def init_send_recv_buffers(block,comm,neighbor_ranks):
     recvtag = 69
     directions = [0,1,2] # Three possible displacements in each dimension
     
-#    C =[
-#        [ 1, 0, 0], 
-#        [-1, 0, 0], 
-#        [ 0, 1, 0], 
-#        [ 0,-1, 0], 
-#        [ 0, 0, 1], 
-#        [ 0, 0,-1], 
-#        [ 1, 1, 0], 
-#        [-1,-1, 0], 
-#        [ 1,-1, 0], 
-#        [-1, 1, 0], 
-#        [ 1, 0, 1], 
-#        [-1, 0,-1],
-#        [ 1, 0,-1], 
-#        [-1, 0, 1], 
-#        [ 0, 1, 1], 
-#        [ 0,-1,-1], 
-#        [ 0, 1,-1], 
-#        [ 0,-1, 1]]
-#    dx=0;dy=1;dz=1
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=2;dy=1;dz=1
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=1;dy=0;dz=1
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=1;dy=2;dz=1
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=1;dy=1;dz=0
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=1;dy=1;dz=2
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=0;dy=0;dz=1 
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=2;dy=2;dz=1
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=0;dy=2;dz=1
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=2;dy=0;dz=1
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    
-#    dx=0;dy=1;dz=0
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=2;dy=1;dz=2
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=0;dy=1;dz=2
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=2;dy=1;dz=0
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=1;dy=0;dz=0
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=1;dy=2;dz=2
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=1;dy=0;dz=2
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
-#    
-#    dx=1;dy=2;dz=0
-#    sc=np.array([sendCounts[dx,dy,dz]]); rc=np.array([0], dtype=np.int32)
-#    # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#    req1.append(comm.Isend(sc, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#    # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#    req2.append(comm.Irecv(rc, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-#    recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]=rc
-#    sendtag+=1; recvtag+=1
 #    
     for dx in directions:
         for dy in directions:
@@ -328,58 +146,6 @@ def init_send_recv_buffers(block,comm,neighbor_ranks):
         else:
             print('Send Receive Counts Confirmed Match')
 
-
-#    req1 = []
-#    req2 = []
-#    sendtag = 69
-#    recvtag = 69
-##    for dx in directions:
-##        for dy in directions:
-##            for dz in directions:
-##                if dx!=1 or dy!=1 or dz!=1:
-#    for x in C:
-#        dx=x[0]+1
-#        dy=x[1]+1
-#        dz=x[2]+1
-#        sl=np.array([sendInds[dx,dy,dz]])
-#        rl=np.zeros([recvCounts[abs(dx-2),abs(dy-2),abs(dz-2)]], dtype=np.int64)
-
-##        recvBuffers[abs(dx-2),abs(dy-2),abs(dz-2)]=rl.tolist()
-##        recvData[abs(dx-2),abs(dy-2),abs(dz-2)]=(rl*0.0).tolist()
-#        
-#        if len(sl) > 0 or len(rl) > 0:
-#            try:
-
-#                # at this rank, at face x,y,z, send data at xyz to opposite face of neighbor rank
-#                req1.append(comm.Isend(sl, dest=neighbor_ranks[dx,dy,dz][0], tag=sendtag))
-#                # at this rank, at face xyz, receive data from the opposite face of neighbor rank
-#                req2.append(comm.Irecv(rl, source=neighbor_ranks[abs(dx-2),abs(dy-2),abs(dz-2)][0], tag=recvtag))
-##                print(f"MPI rank: {rank}")
-##                print(f"dx: {dx}, dy: {dy}, dz: {dz}")
-##                print(f"sendtag: {sendtag}, recvtag: {recvtag}")
-##                print(f"sl: {sl}, rl: {rl}")
-#            except Exception as e:
-#                print(f"Exception occurred during MPI operation: {e}")
-#                print(f"dx: {dx}, dy: {dy}, dz: {dz}")
-#                print(f"sendtag: {sendtag}, recvtag: {recvtag}")
-#                print(f"sl: {sl}, rl: {rl}")
-#            sendtag+=1
-#            recvtag+=1
-##                        
-
-
-#    try:
-#        MPI.Request.Waitall(req1)
-#        MPI.Request.Waitall(req2)
-#    except Exception as e:
-#        print(f"Exception occurred during MPI Waitall operation: {e}")
-#    comm.Barrier()
-
-#    for i in range(3):
-#        for j in range(3):
-#            for k in range(3):
-#                if len(recvInds[i,j,k]) != recvCounts[i,j,k]:
-#                    raise ValueError(f"Discrepancy at ({i}, {j}, {k}): Length of recvInds is {len(recvInds[i,j,k])}, while recvCounts is {recvCounts[i,j,k]}")
     req1 = []
     req2 = []
     sendtag = 69
@@ -420,17 +186,6 @@ def init_send_recv_buffers(block,comm,neighbor_ranks):
     # Compute the global sums
     global_send_sum = comm.allreduce(local_send_sum, op=MPI.SUM)
     global_recv_sum = comm.allreduce(local_recv_sum, op=MPI.SUM)
-#    if rank ==0:
-#        if global_send_sum != global_recv_sum:
-#            print(f"The total sum of the arrays over all ranks is not the same. {global_send_sum} vs {global_recv_sum}")
-
-#    #        print(f"sendInds: ")
-#    #        print(f"{sendInds}")
-
-#    #        print(f"recvInds: ")
-#    #        print(f"{recvInds}")
-#        else:
-#            print('Send Receive Indexes Confirmed Match')
 
     return sendCounts, sendInds, sendBuffers, sendData, recvCounts, recvInds, recvBuffers, recvData
     
